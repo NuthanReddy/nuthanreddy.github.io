@@ -156,6 +156,12 @@ The **HTML shell** shared by all pages:
 | `Navbar.astro` | Fixed top nav with blur backdrop, `</>` logo, section links, blue Contact CTA |
 | `Hero.astro` | Split grid layout — large heading + summary (left), 3 info cards: About Me / My Work / Follow Me (right) |
 | `About.astro` | Section label + heading + summary (left), stats grid: 11+ years / 6+ projects / 28B+ assets / 4 companies (right) |
+| `Experience.astro` | Work timeline — maps jobs through TimelineItem components |
+| `Education.astro` | Responsive grid of education cards (institution, degree, dates) |
+| `Certifications.astro` | Badge-style cards with conditional links, issuer, dates |
+| `SectionHeading.astro` | Reusable: slash icon + uppercase label + large heading |
+| `TechTag.astro` | Reusable: small rounded badge for tech keywords (monospace) |
+| `TimelineItem.astro` | Reusable: timeline dot + line + job details + highlights + tech tags |
 
 ---
 
@@ -205,8 +211,8 @@ The key insight: **Astro generates plain HTML at build time**. There's no JavaSc
 |-------|--------|---------|
 | 1. Scaffolding & Config | ✅ Done | Astro + TS + Tailwind, typed data layer, agent instructions |
 | 2. Layout & Hero | ✅ Done | Navbar, hero (split layout), about section, dark design system |
-| 3. Experience & Education | ⏳ Next | Work timeline, education, certifications |
-| 4. Projects & Skills | ⬚ Pending | Project cards, skills grid, GitHub stats |
+| 3. Experience & Education | ✅ Done | Work timeline, education cards, certification badges |
+| 4. Projects & Skills | ⏳ Next | Project cards, skills grid, GitHub stats |
 | 5. Additional Sections | ⬚ Pending | Talks, OSS, courses, footer |
 | 6. Polish & Deploy | ⬚ Pending | SEO, Lighthouse audit, Cloudflare Pages |
 

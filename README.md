@@ -36,9 +36,15 @@ src/
 ├── pages/index.astro      # Single-page portfolio (all sections)
 ├── layouts/BaseLayout.astro # HTML head, meta, fonts
 ├── components/
-│   ├── Navbar.astro        # Fixed top nav with blur backdrop
-│   ├── Hero.astro          # Split hero — heading + info cards
-│   └── About.astro         # Stats grid (years, projects, etc.)
+│   ├── Navbar.astro          # Fixed top nav with blur backdrop
+│   ├── Hero.astro            # Split hero — heading + info cards
+│   ├── About.astro           # Stats grid (years, projects, etc.)
+│   ├── Experience.astro      # Work timeline with highlights & tags
+│   ├── Education.astro       # Education cards grid
+│   ├── Certifications.astro  # Credential badge cards
+│   ├── SectionHeading.astro  # Reusable section header
+│   ├── TechTag.astro         # Technology keyword badge
+│   └── TimelineItem.astro    # Timeline entry (dot, line, content)
 ├── styles/global.css       # Tailwind @theme + base styles
 ├── lib/data.ts             # Typed data exports from JSON
 └── types/resume.ts         # TypeScript interfaces

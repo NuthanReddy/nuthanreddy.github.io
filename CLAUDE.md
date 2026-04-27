@@ -43,6 +43,12 @@ All content comes from `nuthan-resume-template.json` at the project root. This f
 - `Navbar.astro` — Fixed top nav, blur backdrop, logo, links, contact CTA
 - `Hero.astro` — Split grid: heading + summary left, info cards (About/Work/Follow) right
 - `About.astro` — Stats grid (years, projects, assets, companies)
+- `Experience.astro` — Work experience section with timeline layout
+- `Education.astro` — Education cards in responsive grid
+- `Certifications.astro` — Credential badges with conditional links
+- `SectionHeading.astro` — Reusable section header (slash + label + heading)
+- `TechTag.astro` — Reusable technology keyword badge
+- `TimelineItem.astro` — Single timeline entry (dot, line, content, tags)
 
 ## Design System (via @theme in global.css)
 - `bg-surface` → `#0f172a` (page background)

@@ -1,0 +1,44 @@
+---
+import SectionHeading from "@/components/SectionHeading.astro";
+import { certifications } from "@/lib/data";
+---
+
+<section id="certifications" class="py-20 border-t border-white/5">
+  <div class="mx-auto max-w-6xl px-6">
+    <SectionHeading label="Certifications" heading="Credentials & Certifications" />
+    <div class="mt-12 flex flex-wrap gap-4">
+      {certifications.map((cert) => (
+        <>
+          {cert.url ? (
+            <a
+              href={cert.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="rounded-xl bg-surface-card border border-white/5 px-5 py-4 hover:border-accent/50 transition-colors cursor-pointer"
+            >
+              <div class="flex items-center gap-2">
+                <span class="text-accent text-sm">✦</span>
+                <span class="text-sm font-semibold text-white">{cert.name}</span>
+              </div>
+              <div class="mt-1 flex items-center gap-2 text-xs">
+                {cert.issuer && <span class="text-muted">{cert.issuer}</span>}
+                <span class="text-accent">{cert.date}</span>
+              </div>
+            </a>
+          ) : (
+            <div class="rounded-xl bg-surface-card border border-white/5 px-5 py-4">
+              <div class="flex items-center gap-2">
+                <span class="text-accent text-sm">✦</span>
+                <span class="text-sm font-semibold text-white">{cert.name}</span>
+              </div>
+              <div class="mt-1 flex items-center gap-2 text-xs">
+                {cert.issuer && <span class="text-muted">{cert.issuer}</span>}
+                <span class="text-accent">{cert.date}</span>
+              </div>
+            </div>
+          )}
+        </>
+      ))}
+    </div>
+  </div>
+</section>

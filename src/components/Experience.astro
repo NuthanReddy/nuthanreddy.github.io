@@ -1,0 +1,25 @@
+---
+import SectionHeading from "@/components/SectionHeading.astro";
+import TimelineItem from "@/components/TimelineItem.astro";
+import { jobs } from "@/lib/data";
+---
+
+<section id="experience" class="py-20 border-t border-white/5">
+  <div class="mx-auto max-w-6xl px-6">
+    <SectionHeading label="Experience" heading="Where I've worked" />
+    <div class="mt-12">
+      {jobs.map((job, index) => (
+        <TimelineItem
+          position={job.position}
+          company={job.company}
+          location={job.location}
+          startDate={job.startDate}
+          endDate={job.endDate}
+          highlights={job.highlights}
+          keywords={job.keywords}
+          isLast={index === jobs.length - 1}
+        />
+      ))}
+    </div>
+  </div>
+</section>
