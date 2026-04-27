@@ -162,6 +162,9 @@ The **HTML shell** shared by all pages:
 | `SectionHeading.astro` | Reusable: slash icon + uppercase label + large heading |
 | `TechTag.astro` | Reusable: small rounded badge for tech keywords (monospace) |
 | `TimelineItem.astro` | Reusable: timeline dot + line + job details + highlights + tech tags |
+| `Projects.astro` | Featured projects section — maps projects through ProjectCard in 2-col grid |
+| `ProjectCard.astro` | Reusable: project name, company, description bullets, tech tags, optional link |
+| `Skills.astro` | Technical skills grouped by category — 6 groups in responsive 3-col grid |
 
 ---
 
@@ -212,8 +215,8 @@ The key insight: **Astro generates plain HTML at build time**. There's no JavaSc
 | 1. Scaffolding & Config | ✅ Done | Astro + TS + Tailwind, typed data layer, agent instructions |
 | 2. Layout & Hero | ✅ Done | Navbar, hero (split layout), about section, dark design system |
 | 3. Experience & Education | ✅ Done | Work timeline, education cards, certification badges |
-| 4. Projects & Skills | ⏳ Next | Project cards, skills grid, GitHub stats |
-| 5. Additional Sections | ⬚ Pending | Talks, OSS, courses, footer |
+| 4. Projects & Skills | ✅ Done | Project cards in 2-col grid, skills by category |
+| 5. Additional Sections | ⏳ Next | Talks, OSS, courses, footer |
 | 6. Polish & Deploy | ⬚ Pending | SEO, Lighthouse audit, Cloudflare Pages |
 
 

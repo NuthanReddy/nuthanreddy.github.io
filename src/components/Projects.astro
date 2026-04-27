@@ -1,0 +1,22 @@
+---
+import SectionHeading from "@/components/SectionHeading.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
+import { projects } from "@/lib/data";
+---
+
+<section id="projects" class="py-20 border-t border-white/5">
+  <div class="mx-auto max-w-6xl px-6">
+    <SectionHeading label="Projects" heading="Featured Projects" />
+    <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+      {projects.map((project) => (
+        <ProjectCard
+          name={project.name}
+          company={project.company}
+          keywords={project.keywords}
+          description={project.description}
+          url={project.url}
+        />
+      ))}
+    </div>
+  </div>
+</section>

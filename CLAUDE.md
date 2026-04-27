@@ -49,6 +49,9 @@ All content comes from `nuthan-resume-template.json` at the project root. This f
 - `SectionHeading.astro` — Reusable section header (slash + label + heading)
 - `TechTag.astro` — Reusable technology keyword badge
 - `TimelineItem.astro` — Single timeline entry (dot, line, content, tags)
+- `Projects.astro` — Featured projects section in 2-column grid
+- `ProjectCard.astro` — Single project card (name, company, descriptions, tech tags, link)
+- `Skills.astro` — Technical skills grouped by category in 3-column grid
 
 ## Design System (via @theme in global.css)
 - `bg-surface` → `#0f172a` (page background)

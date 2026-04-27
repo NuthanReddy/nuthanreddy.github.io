@@ -44,7 +44,10 @@ src/
 │   ├── Certifications.astro  # Credential badge cards
 │   ├── SectionHeading.astro  # Reusable section header
 │   ├── TechTag.astro         # Technology keyword badge
-│   └── TimelineItem.astro    # Timeline entry (dot, line, content)
+│   ├── TimelineItem.astro    # Timeline entry (dot, line, content)
+│   ├── Projects.astro        # Featured projects 2-col grid
+│   ├── ProjectCard.astro     # Single project card with details
+│   └── Skills.astro          # Skills grouped by category
 ├── styles/global.css       # Tailwind @theme + base styles
 ├── lib/data.ts             # Typed data exports from JSON
 └── types/resume.ts         # TypeScript interfaces
