@@ -75,15 +75,16 @@ const catColors = [
 ];
 
 // Compute graph layout at build time
-const W = 1000, H = 800;
+const W = 1100, H = 900;
 const cx = W / 2, cy = H / 2;
-const catRadius = 250;
+const catRadius = 280;
 
 interface GraphNode {
   x: number; y: number; r: number;
   label: string; type: string; color: string;
   tooltip: string;
   side: 'left' | 'right' | 'top' | 'bottom' | 'center';
+  parentIdx: number;
 }
 interface GraphEdge { x1: number; y1: number; x2: number; y2: number; color: string; }
 
@@ -92,7 +93,7 @@ const graphEdges: GraphEdge[] = [];
 
 // Center node
 graphNodes.push({
-  x: cx, y: cy, r: 44, label: 'Skills', type: 'center', color: '#3B82F6', side: 'center',
+  x: cx, y: cy, r: 44, label: 'Skills', type: 'center', color: '#3B82F6', side: 'center', parentIdx: -1,
   tooltip: `<strong class="text-blue-400">Nuthan Reddy</strong><br/><span class="text-gray-400">${skills.length} skill areas · ${skills.reduce((a, g) => a + g.keywords.length, 0)} technologies</span>`
 });
 
@@ -122,14 +123,31 @@ skills.forEach((group, gi) => {
   // Edge from center to category
   graphEdges.push({ x1: cx, y1: cy, x2: gx, y2: gy, color: col });
 
-  graphNodes.push({ x: gx, y: gy, r: 34, label: group.name, type: 'category', color: col, side: catSide, tooltip: catTip });
+  var catIdx = graphNodes.length;
+  graphNodes.push({ x: gx, y: gy, r: 34, label: group.name, type: 'category', color: col, side: catSide, parentIdx: 0, tooltip: catTip });
 
   // Skill nodes — dispersed wider with more spread
-  const kwRadius = 110;
-  const kwCount = group.keywords.length;
-  group.keywords.forEach((kw, ki) => {
-    const spread = Math.min(0.55, 2.8 / kwCount);
+  // Sort keywords: longest labels to outer positions, shortest in center
+  // This prevents overlap since outer positions have more angular separation
+  const sortedKws = [...group.keywords].sort((a, b) => b.length - a.length);
+  // Interleave: place longest at edges, shortest in middle
+  const orderedKws: string[] = new Array(sortedKws.length);
+  let left = 0, right = sortedKws.length - 1;
+  for (let si = 0; si < sortedKws.length; si++) {
+    if (si % 2 === 0) {
+      orderedKws[left++] = sortedKws[si];
+    } else {
+      orderedKws[right--] = sortedKws[si];
+    }
+  }
+
+  const kwCount = orderedKws.length;
+  orderedKws.forEach((kw, ki) => {
+    const totalSpan = 150 * Math.PI / 180; // 150 degrees in radians
+    const spread = kwCount > 1 ? totalSpan / (kwCount - 1) : 0;
     const kwAngle = angle + ((ki - (kwCount - 1) / 2) * spread);
+    // Stagger radius: alternate between inner and outer ring to avoid label overlap
+    const kwRadius = ki % 2 === 0 ? 120 : 90;
     const kx = gx + Math.cos(kwAngle) * kwRadius;
     const ky = gy + Math.sin(kwAngle) * kwRadius;
     const backing = getSkillBacking(kw);
@@ -150,7 +168,7 @@ skills.forEach((group, gi) => {
     if (backing.contributions.length) tip += `<br/><br/><span style="font-size:10px;color:#666">CONTRIBUTIONS</span><br/>${backing.contributions.map(c => `<span class="text-gray-300">🔧 ${c}</span>`).join('<br/>')}`;
 
     graphEdges.push({ x1: gx, y1: gy, x2: kx, y2: ky, color: col });
-    graphNodes.push({ x: kx, y: ky, r: 8, label: kw, type: 'skill', color: col, side: skillSide, tooltip: tip });
+    graphNodes.push({ x: kx, y: ky, r: 8, label: kw, type: 'skill', color: col, side: skillSide, parentIdx: catIdx, tooltip: tip });
   });
 });
 ---
@@ -169,7 +187,7 @@ skills.forEach((group, gi) => {
 
         <!-- Nodes -->
         {graphNodes.map((n, i) => (
-          <g class="skill-node" data-idx={i} data-tip={n.tooltip} data-x={n.x} data-y={n.y} style="cursor:pointer">
+          <g class="skill-node" data-idx={i} data-tip={n.tooltip} data-x={n.x} data-y={n.y} data-type={n.type} data-parent={n.parentIdx} style="cursor:pointer">
             {/* Hover glow */}
             <circle cx={n.x} cy={n.y} r={n.r + 6} fill={n.color} opacity="0" class="node-glow" />
             {/* Node circle */}
@@ -454,7 +472,21 @@ document.addEventListener('DOMContentLoaded', function() {
     var pt = getSVGPoint(e);
     var nx = pt.x - dragOffset.x;
     var ny = pt.y - dragOffset.y;
+    var oldX = parseFloat(dragNode.getAttribute('data-x'));
+    var oldY = parseFloat(dragNode.getAttribute('data-y'));
+    var deltaX = nx - oldX;
+    var deltaY = ny - oldY;
     moveNode(dragNode, nx, ny);
+    // Move all children along with this parent
+    var dragIdx = dragNode.getAttribute('data-idx');
+    nodes.forEach(function(child) {
+      if (child === dragNode) return;
+      if (child.getAttribute('data-parent') === dragIdx) {
+        var cx = parseFloat(child.getAttribute('data-x')) + deltaX;
+        var cy = parseFloat(child.getAttribute('data-y')) + deltaY;
+        moveNode(child, cx, cy);
+      }
+    });
     updateEdges();
   });
 
