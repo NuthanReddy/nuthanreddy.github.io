@@ -1,0 +1,21 @@
+---
+import SectionHeading from "@/components/SectionHeading.astro";
+import { courses } from "@/lib/data";
+---
+
+<section id="courses" class="py-20 border-t border-white/5">
+  <div class="mx-auto max-w-6xl px-6">
+    <SectionHeading label="Courses" heading="Courses & Learning" />
+    <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-4">
+      {courses.map((course) => (
+        <div class="border-l-2 border-accent/30 pl-4 py-2">
+          <p class="text-sm font-medium text-white">{course.name}</p>
+          <div class="flex items-center gap-2 mt-1">
+            <span class="text-xs text-muted">{course.institute}</span>
+            {course.year && <span class="text-xs text-accent">· {course.year}</span>}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

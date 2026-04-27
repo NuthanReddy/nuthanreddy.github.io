@@ -1,0 +1,195 @@
+---
+import SectionHeading from "@/components/SectionHeading.astro";
+import { skills, projects, courses } from "@/lib/data";
+
+// Build skill keyword -> projects mapping (exact keyword match + project name fuzzy match)
+const skillToProjects = new Map<string, string[]>();
+for (const project of projects) {
+  // Index by exact keywords
+  for (const keyword of project.keywords) {
+    const key = keyword.toLowerCase();
+    if (!skillToProjects.has(key)) skillToProjects.set(key, []);
+    if (!skillToProjects.get(key)!.includes(project.name)) {
+      skillToProjects.get(key)!.push(project.name);
+    }
+  }
+  // Also index each word in the project name for fuzzy matching
+  for (const word of project.name.toLowerCase().split(/\s+/)) {
+    if (word.length < 3) continue; // skip short words like "on", "of"
+    if (!skillToProjects.has(word)) skillToProjects.set(word, []);
+    if (!skillToProjects.get(word)!.includes(project.name)) {
+      skillToProjects.get(word)!.push(project.name);
+    }
+  }
+}
+
+// Build node data for the graph
+const nodeData = skills.map((group) => {
+  const relatedProjects = new Set<string>();
+  for (const kw of group.keywords) {
+    // Exact match on skill keyword
+    const matches = skillToProjects.get(kw.toLowerCase());
+    if (matches) matches.forEach(p => relatedProjects.add(p));
+    // Also match individual words in multi-word skills
+    for (const word of kw.toLowerCase().split(/\s+/)) {
+      if (word.length < 3) continue;
+      const wordMatches = skillToProjects.get(word);
+      if (wordMatches) wordMatches.forEach(p => relatedProjects.add(p));
+    }
+  }
+  return {
+    name: group.name,
+    keywords: group.keywords,
+    projects: [...relatedProjects],
+  };
+});
+---
+
+<section id="skill-map" class="py-20 border-t border-white/5">
+  <div class="mx-auto max-w-6xl px-6">
+    <SectionHeading label="Skill Map" heading="Skills × Projects" />
+    <p class="mt-4 text-sm text-muted max-w-2xl">Hover over a skill node to see related technologies and projects.</p>
+
+    <div class="mt-12 relative" id="skill-map-container">
+      <!-- SVG Canvas for lines -->
+      <svg id="skill-map-svg" class="absolute inset-0 w-full h-full pointer-events-none z-0" aria-hidden="true"></svg>
+
+      <!-- Nodes grid -->
+      <div class="relative z-10 grid grid-cols-2 md:grid-cols-3 gap-4">
+        {nodeData.map((node, i) => (
+          <button
+            type="button"
+            class="skill-node group relative rounded-xl bg-surface-card border border-white/10 p-5 text-left transition-all duration-200 hover:border-accent/60 hover:shadow-lg hover:shadow-accent/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            data-index={i}
+            data-keywords={JSON.stringify(node.keywords)}
+            data-projects={JSON.stringify(node.projects)}
+          >
+            <!-- Glow dot -->
+            <div class="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-accent/60 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+            <h3 class="text-sm font-semibold text-white">{node.name}</h3>
+            <p class="text-xs text-muted mt-1">{node.keywords.length} skills · {node.projects.length} projects</p>
+
+            <!-- Tooltip (shown on hover) -->
+            <div class="skill-tooltip absolute left-1/2 -translate-x-1/2 bottom-full mb-3 w-72 rounded-xl bg-gray-900 border border-white/10 p-4 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none">
+              <div class="text-xs font-semibold uppercase tracking-widest text-accent mb-2">{node.name}</div>
+
+              <div class="mb-3">
+                <div class="text-[10px] uppercase tracking-wide text-muted/60 mb-1">Technologies</div>
+                <div class="flex flex-wrap gap-1">
+                  {node.keywords.map(kw => (
+                    <span class="inline-flex rounded-full bg-accent/10 border border-accent/20 px-2 py-0.5 text-[11px] font-mono text-accent">{kw}</span>
+                  ))}
+                </div>
+              </div>
+
+              {node.projects.length > 0 && (
+                <div>
+                  <div class="text-[10px] uppercase tracking-wide text-muted/60 mb-1">Used in Projects</div>
+                  <div class="space-y-1">
+                    {node.projects.map(p => (
+                      <div class="text-xs text-muted flex items-center gap-1.5">
+                        <span class="text-accent text-[10px]">▸</span>{p}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <!-- Tooltip arrow -->
+              <div class="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-gray-900"></div>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      <!-- Connecting lines drawn via minimal JS -->
+    </div>
+  </div>
+</section>
+
+<script>
+  // Draw SVG lines between skill nodes that share projects
+  function drawConnections() {
+    const container = document.getElementById('skill-map-container');
+    const svg = document.getElementById('skill-map-svg');
+    const nodes = document.querySelectorAll('.skill-node');
+    if (!container || !svg || nodes.length === 0) return;
+
+    // Clear existing
+    svg.innerHTML = '';
+
+    const containerRect = container.getBoundingClientRect();
+
+    // Build adjacency: nodes sharing projects get a line
+    const nodeProjects: string[][] = [];
+    nodes.forEach(n => {
+      nodeProjects.push(JSON.parse(n.getAttribute('data-projects') || '[]'));
+    });
+
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const shared = nodeProjects[i].filter(p => nodeProjects[j].includes(p));
+        if (shared.length === 0) continue;
+
+        const rectA = nodes[i].getBoundingClientRect();
+        const rectB = nodes[j].getBoundingClientRect();
+
+        const x1 = rectA.left + rectA.width / 2 - containerRect.left;
+        const y1 = rectA.top + rectA.height / 2 - containerRect.top;
+        const x2 = rectB.left + rectB.width / 2 - containerRect.left;
+        const y2 = rectB.top + rectB.height / 2 - containerRect.top;
+
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', String(x1));
+        line.setAttribute('y1', String(y1));
+        line.setAttribute('x2', String(x2));
+        line.setAttribute('y2', String(y2));
+        line.setAttribute('stroke', '#3B82F6');
+        line.setAttribute('stroke-opacity', '0.15');
+        line.setAttribute('stroke-width', String(Math.min(shared.length, 3)));
+        line.setAttribute('stroke-dasharray', '4 4');
+        svg.appendChild(line);
+      }
+    }
+  }
+
+  // Highlight connections on hover
+  function setupHover() {
+    const nodes = document.querySelectorAll('.skill-node');
+    const svg = document.getElementById('skill-map-svg');
+
+    nodes.forEach((node, idx) => {
+      node.addEventListener('mouseenter', () => {
+        const lines = svg?.querySelectorAll('line');
+        lines?.forEach(line => {
+          line.setAttribute('stroke-opacity', '0.05');
+        });
+        // Highlight lines connected to this node
+        const myProjects: string[] = JSON.parse(node.getAttribute('data-projects') || '[]');
+        nodes.forEach((other, j) => {
+          if (j === idx) return;
+          const otherProjects: string[] = JSON.parse(other.getAttribute('data-projects') || '[]');
+          const shared = myProjects.filter(p => otherProjects.includes(p));
+          if (shared.length > 0) {
+            (other as HTMLElement).style.borderColor = 'rgba(59, 130, 246, 0.4)';
+          }
+        });
+      });
+
+      node.addEventListener('mouseleave', () => {
+        const lines = svg?.querySelectorAll('line');
+        lines?.forEach(line => {
+          line.setAttribute('stroke-opacity', '0.15');
+        });
+        nodes.forEach(other => {
+          (other as HTMLElement).style.borderColor = '';
+        });
+      });
+    });
+  }
+
+  drawConnections();
+  setupHover();
+  window.addEventListener('resize', drawConnections);
+</script>

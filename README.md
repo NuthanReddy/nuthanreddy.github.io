@@ -47,7 +47,11 @@ src/
 │   ├── TimelineItem.astro    # Timeline entry (dot, line, content)
 │   ├── Projects.astro        # Featured projects 2-col grid
 │   ├── ProjectCard.astro     # Single project card with details
-│   └── Skills.astro          # Skills grouped by category
+│   ├── Skills.astro          # Skills grouped by category
+│   ├── SkillMap.astro        # Skills × Projects relationship map
+│   ├── Talks.astro           # Talks & OSS contributions
+│   ├── Courses.astro         # Courses & learning list
+│   └── Footer.astro          # Social links, back-to-top, copyright
 ├── styles/global.css       # Tailwind @theme + base styles
 ├── lib/data.ts             # Typed data exports from JSON
 └── types/resume.ts         # TypeScript interfaces

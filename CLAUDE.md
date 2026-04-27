@@ -52,6 +52,10 @@ All content comes from `nuthan-resume-template.json` at the project root. This f
 - `Projects.astro` — Featured projects section in 2-column grid
 - `ProjectCard.astro` — Single project card (name, company, descriptions, tech tags, link)
 - `Skills.astro` — Technical skills grouped by category in 3-column grid
+- `SkillMap.astro` — Skills × Projects relationship map (build-time data mapping)
+- `Talks.astro` — Talks & Open Source contributions (ApacheCon, spark-snowflake)
+- `Courses.astro` — Courses & learning list with institute and year
+- `Footer.astro` — Social links, back-to-top, copyright
 
 ## Design System (via @theme in global.css)
 - `bg-surface` → `#0f172a` (page background)

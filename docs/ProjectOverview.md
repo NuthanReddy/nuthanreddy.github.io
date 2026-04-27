@@ -165,6 +165,10 @@ The **HTML shell** shared by all pages:
 | `Projects.astro` | Featured projects section — maps projects through ProjectCard in 2-col grid |
 | `ProjectCard.astro` | Reusable: project name, company, description bullets, tech tags, optional link |
 | `Skills.astro` | Technical skills grouped by category — 6 groups in responsive 3-col grid |
+| `SkillMap.astro` | Skills × Projects relationship map — build-time keyword matching, zero JS |
+| `Talks.astro` | Conference talks + OSS contributions — ApacheCon 2020, spark-snowflake |
+| `Courses.astro` | Compact 2-col list of 11 courses with institute and year |
+| `Footer.astro` | Social links (LinkedIn, GitHub, Email), back-to-top, copyright |
 
 ---
 
@@ -216,7 +220,7 @@ The key insight: **Astro generates plain HTML at build time**. There's no JavaSc
 | 2. Layout & Hero | ✅ Done | Navbar, hero (split layout), about section, dark design system |
 | 3. Experience & Education | ✅ Done | Work timeline, education cards, certification badges |
 | 4. Projects & Skills | ✅ Done | Project cards in 2-col grid, skills by category |
-| 5. Additional Sections | ⏳ Next | Talks, OSS, courses, footer |
-| 6. Polish & Deploy | ⬚ Pending | SEO, Lighthouse audit, Cloudflare Pages |
+| 5. Additional Sections | ✅ Done | SkillMap, Talks, OSS, Courses, Footer |
+| 6. Polish & Deploy | ⏳ Next | SEO, Lighthouse audit, Cloudflare Pages |
 
 

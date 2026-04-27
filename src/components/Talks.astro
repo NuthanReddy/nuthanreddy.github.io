@@ -1,0 +1,50 @@
+---
+import SectionHeading from "@/components/SectionHeading.astro";
+import TechTag from "@/components/TechTag.astro";
+---
+
+<section id="talks" class="py-20 border-t border-white/5">
+  <div class="mx-auto max-w-6xl px-6">
+    <SectionHeading label="Talks & Open Source" heading="Community Contributions" />
+    <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+
+      <!-- Talk -->
+      <div class="rounded-xl bg-surface-card border border-white/5 p-6">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-accent">🎤</span>
+          <span class="text-xs font-semibold uppercase tracking-widest text-muted">Conference Talk</span>
+        </div>
+        <h3 class="text-lg font-bold text-white">Planet-Scale Prebid Streaming Pipeline</h3>
+        <p class="text-sm font-semibold text-accent mt-1">ApacheCon North America 2020</p>
+        <p class="mt-3 text-sm text-muted leading-relaxed">
+          Presented the architecture of a planet-scale streaming pipeline supporting 100k req/sec and 1GB/sec throughput for OpenX's Prebid system.
+        </p>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <TechTag name="Kafka" />
+          <TechTag name="PubSub" />
+          <TechTag name="Kubernetes" />
+          <TechTag name="Java" />
+        </div>
+      </div>
+
+      <!-- Open Source -->
+      <div class="rounded-xl bg-surface-card border border-white/5 p-6">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-accent">🔧</span>
+          <span class="text-xs font-semibold uppercase tracking-widest text-muted">Open Source</span>
+        </div>
+        <h3 class="text-lg font-bold text-white">spark-snowflake Connector</h3>
+        <a href="https://github.com/snowflakedb/spark-snowflake" target="_blank" rel="noopener" class="text-sm font-semibold text-accent hover:underline mt-1 inline-block">snowflakedb/spark-snowflake</a>
+        <p class="mt-3 text-sm text-muted leading-relaxed">
+          Contributed as a committer, fixing critical bugs involving data correctness in the official Spark-Snowflake connector.
+        </p>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <TechTag name="Apache Spark" />
+          <TechTag name="Snowflake" />
+          <TechTag name="Scala" />
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
