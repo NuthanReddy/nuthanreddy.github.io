@@ -1,195 +1,247 @@
 ---
 import SectionHeading from "@/components/SectionHeading.astro";
-import { skills, projects, courses } from "@/lib/data";
+import { skills, projects, courses, certifications } from "@/lib/data";
 
-// Build skill keyword -> projects mapping (exact keyword match + project name fuzzy match)
-const skillToProjects = new Map<string, string[]>();
+// Build skill keyword -> related data
+const skillData = new Map<string, { projects: string[]; courses: string[]; certs: string[] }>();
+
 for (const project of projects) {
-  // Index by exact keywords
-  for (const keyword of project.keywords) {
-    const key = keyword.toLowerCase();
-    if (!skillToProjects.has(key)) skillToProjects.set(key, []);
-    if (!skillToProjects.get(key)!.includes(project.name)) {
-      skillToProjects.get(key)!.push(project.name);
-    }
+  for (const kw of project.keywords) {
+    const key = kw.toLowerCase();
+    if (!skillData.has(key)) skillData.set(key, { projects: [], courses: [], certs: [] });
+    const d = skillData.get(key)!;
+    if (!d.projects.includes(project.name)) d.projects.push(project.name);
   }
-  // Also index each word in the project name for fuzzy matching
-  for (const word of project.name.toLowerCase().split(/\s+/)) {
-    if (word.length < 3) continue; // skip short words like "on", "of"
-    if (!skillToProjects.has(word)) skillToProjects.set(word, []);
-    if (!skillToProjects.get(word)!.includes(project.name)) {
-      skillToProjects.get(word)!.push(project.name);
+}
+
+// Map courses to skills by keyword matching in course name
+for (const course of courses) {
+  const cname = course.name.toLowerCase();
+  for (const group of skills) {
+    for (const kw of group.keywords) {
+      if (cname.includes(kw.toLowerCase()) || kw.toLowerCase().split(/\s+/).some(w => w.length > 3 && cname.includes(w))) {
+        const key = kw.toLowerCase();
+        if (!skillData.has(key)) skillData.set(key, { projects: [], courses: [], certs: [] });
+        const d = skillData.get(key)!;
+        if (!d.courses.includes(course.name)) d.courses.push(course.name);
+      }
     }
   }
 }
 
-// Build node data for the graph
-const nodeData = skills.map((group) => {
-  const relatedProjects = new Set<string>();
-  for (const kw of group.keywords) {
-    // Exact match on skill keyword
-    const matches = skillToProjects.get(kw.toLowerCase());
-    if (matches) matches.forEach(p => relatedProjects.add(p));
-    // Also match individual words in multi-word skills
-    for (const word of kw.toLowerCase().split(/\s+/)) {
-      if (word.length < 3) continue;
-      const wordMatches = skillToProjects.get(word);
-      if (wordMatches) wordMatches.forEach(p => relatedProjects.add(p));
+// Map certifications by name keyword matching
+for (const cert of certifications) {
+  const cname = cert.name.toLowerCase();
+  for (const group of skills) {
+    for (const kw of group.keywords) {
+      if (cname.includes(kw.toLowerCase()) || kw.toLowerCase().split(/\s+/).some(w => w.length > 3 && cname.includes(w))) {
+        const key = kw.toLowerCase();
+        if (!skillData.has(key)) skillData.set(key, { projects: [], courses: [], certs: [] });
+        const d = skillData.get(key)!;
+        if (!d.certs.includes(cert.name)) d.certs.push(cert.name);
+      }
     }
   }
-  return {
-    name: group.name,
-    keywords: group.keywords,
-    projects: [...relatedProjects],
-  };
+}
+
+// Get backing data for a single skill keyword
+function getSkillBacking(kw: string) {
+  const d = skillData.get(kw.toLowerCase());
+  return { projects: d?.projects || [], courses: d?.courses || [], certs: d?.certs || [] };
+}
+
+// Category color palette
+const catColors = [
+  '#3B82F6', // blue
+  '#22c55e', // green
+  '#a855f7', // purple
+  '#f59e0b', // amber
+  '#06b6d4', // cyan
+  '#f43f5e', // rose
+];
+
+// Compute graph layout at build time
+const W = 1000, H = 800;
+const cx = W / 2, cy = H / 2;
+const catRadius = 250;
+
+interface GraphNode {
+  x: number; y: number; r: number;
+  label: string; type: string; color: string;
+  tooltip: string;
+  side: 'left' | 'right' | 'top' | 'bottom' | 'center';
+}
+interface GraphEdge { x1: number; y1: number; x2: number; y2: number; color: string; }
+
+const graphNodes: GraphNode[] = [];
+const graphEdges: GraphEdge[] = [];
+
+// Center node
+graphNodes.push({
+  x: cx, y: cy, r: 44, label: 'Skills', type: 'center', color: '#3B82F6', side: 'center',
+  tooltip: `<strong class="text-blue-400">Nuthan Reddy</strong><br/><span class="text-gray-400">${skills.length} skill areas · ${skills.reduce((a, g) => a + g.keywords.length, 0)} technologies</span>`
+});
+
+skills.forEach((group, gi) => {
+  const angle = (gi / skills.length) * Math.PI * 2 - Math.PI / 2;
+  const gx = cx + Math.cos(angle) * catRadius;
+  const gy = cy + Math.sin(angle) * catRadius;
+  const col = catColors[gi % catColors.length];
+
+  // Determine which side of center this category is on
+  const dx = gx - cx;
+  const dy = gy - cy;
+  let catSide: 'left' | 'right' | 'top' | 'bottom';
+  if (Math.abs(dx) > Math.abs(dy)) {
+    catSide = dx > 0 ? 'right' : 'left';
+  } else {
+    catSide = dy > 0 ? 'bottom' : 'top';
+  }
+
+  // Aggregate projects for category
+  const groupKeywords = group.keywords.map(kw => ({ name: kw, ...getSkillBacking(kw) }));
+  const allProjects = [...new Set(groupKeywords.flatMap(k => k.projects))];
+  let catTip = `<strong style="color:${col}">${group.name}</strong><br/>`;
+  catTip += `<span class="text-gray-400" style="font-size:11px">${group.keywords.join(' · ')}</span>`;
+  if (allProjects.length > 0) catTip += `<br/><br/><span style="font-size:10px;color:#666">PROJECTS</span><br/>${allProjects.map(p => `<span class="text-gray-300">▸ ${p}</span>`).join('<br/>')}`;
+
+  // Edge from center to category
+  graphEdges.push({ x1: cx, y1: cy, x2: gx, y2: gy, color: col });
+
+  graphNodes.push({ x: gx, y: gy, r: 34, label: group.name, type: 'category', color: col, side: catSide, tooltip: catTip });
+
+  // Skill nodes — dispersed wider with more spread
+  const kwRadius = 110;
+  const kwCount = group.keywords.length;
+  group.keywords.forEach((kw, ki) => {
+    const spread = Math.min(0.55, 2.8 / kwCount);
+    const kwAngle = angle + ((ki - (kwCount - 1) / 2) * spread);
+    const kx = gx + Math.cos(kwAngle) * kwRadius;
+    const ky = gy + Math.sin(kwAngle) * kwRadius;
+    const backing = getSkillBacking(kw);
+
+    // Skill label placement: top categories keep text on top, bottom on bottom
+    let skillSide: 'left' | 'right' | 'top' | 'bottom' = catSide;
+    if (catSide === 'top') {
+      skillSide = 'top';
+    } else if (catSide === 'bottom') {
+      skillSide = 'bottom';
+    }
+
+    let tip = `<strong style="color:${col};font-family:monospace">${kw}</strong>`;
+    if (backing.projects.length) tip += `<br/><br/><span style="font-size:10px;color:#666">PROJECTS</span><br/>${backing.projects.map(p => `<span class="text-gray-300">▸ ${p}</span>`).join('<br/>')}`;
+    if (backing.courses.length) tip += `<br/><br/><span style="font-size:10px;color:#666">COURSES</span><br/>${backing.courses.map(c => `<span class="text-gray-300">📚 ${c}</span>`).join('<br/>')}`;
+    if (backing.certs.length) tip += `<br/><br/><span style="font-size:10px;color:#666">CERTIFICATIONS</span><br/>${backing.certs.map(c => `<span class="text-gray-300">✦ ${c}</span>`).join('<br/>')}`;
+    if (!backing.projects.length && !backing.courses.length && !backing.certs.length) tip += `<br/><span class="text-gray-500" style="font-size:11px">Core skill</span>`;
+
+    graphEdges.push({ x1: gx, y1: gy, x2: kx, y2: ky, color: col });
+    graphNodes.push({ x: kx, y: ky, r: 8, label: kw, type: 'skill', color: col, side: skillSide, tooltip: tip });
+  });
 });
 ---
 
 <section id="skill-map" class="py-20 border-t border-white/5">
   <div class="mx-auto max-w-6xl px-6">
     <SectionHeading label="Skill Map" heading="Skills × Projects" />
-    <p class="mt-4 text-sm text-muted max-w-2xl">Hover over a skill node to see related technologies and projects.</p>
+    <p class="mt-4 text-sm text-muted max-w-2xl">Hover over any node to see the projects, courses, and certifications behind it.</p>
 
-    <div class="mt-12 relative" id="skill-map-container">
-      <!-- SVG Canvas for lines -->
-      <svg id="skill-map-svg" class="absolute inset-0 w-full h-full pointer-events-none z-0" aria-hidden="true"></svg>
-
-      <!-- Nodes grid -->
-      <div class="relative z-10 grid grid-cols-2 md:grid-cols-3 gap-4">
-        {nodeData.map((node, i) => (
-          <button
-            type="button"
-            class="skill-node group relative rounded-xl bg-surface-card border border-white/10 p-5 text-left transition-all duration-200 hover:border-accent/60 hover:shadow-lg hover:shadow-accent/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-            data-index={i}
-            data-keywords={JSON.stringify(node.keywords)}
-            data-projects={JSON.stringify(node.projects)}
-          >
-            <!-- Glow dot -->
-            <div class="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-accent/60 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-
-            <h3 class="text-sm font-semibold text-white">{node.name}</h3>
-            <p class="text-xs text-muted mt-1">{node.keywords.length} skills · {node.projects.length} projects</p>
-
-            <!-- Tooltip (shown on hover) -->
-            <div class="skill-tooltip absolute left-1/2 -translate-x-1/2 bottom-full mb-3 w-72 rounded-xl bg-gray-900 border border-white/10 p-4 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none">
-              <div class="text-xs font-semibold uppercase tracking-widest text-accent mb-2">{node.name}</div>
-
-              <div class="mb-3">
-                <div class="text-[10px] uppercase tracking-wide text-muted/60 mb-1">Technologies</div>
-                <div class="flex flex-wrap gap-1">
-                  {node.keywords.map(kw => (
-                    <span class="inline-flex rounded-full bg-accent/10 border border-accent/20 px-2 py-0.5 text-[11px] font-mono text-accent">{kw}</span>
-                  ))}
-                </div>
-              </div>
-
-              {node.projects.length > 0 && (
-                <div>
-                  <div class="text-[10px] uppercase tracking-wide text-muted/60 mb-1">Used in Projects</div>
-                  <div class="space-y-1">
-                    {node.projects.map(p => (
-                      <div class="text-xs text-muted flex items-center gap-1.5">
-                        <span class="text-accent text-[10px]">▸</span>{p}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <!-- Tooltip arrow -->
-              <div class="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-gray-900"></div>
-            </div>
-          </button>
+    <div class="mt-12 relative" id="skill-map-wrap">
+      <svg viewBox={`0 0 ${W} ${H}`} class="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
+        <!-- Edges -->
+        {graphEdges.map(e => (
+          <line x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2} stroke={e.color} stroke-opacity="0.15" stroke-width="1.5" />
         ))}
-      </div>
 
-      <!-- Connecting lines drawn via minimal JS -->
+        <!-- Nodes -->
+        {graphNodes.map((n, i) => (
+          <g class="skill-node" data-idx={i} data-tip={n.tooltip} style="cursor:pointer">
+            {/* Hover glow */}
+            <circle cx={n.x} cy={n.y} r={n.r + 6} fill={n.color} opacity="0" class="node-glow" />
+            {/* Node circle */}
+            {n.type === 'center' ? (
+              <circle cx={n.x} cy={n.y} r={n.r} fill="#0a0f1a" stroke="#60a5fa" stroke-width="3" />
+            ) : n.type === 'category' ? (
+              <circle cx={n.x} cy={n.y} r={n.r} fill="#0a0f1a" stroke={n.color} stroke-width="1.5" stroke-opacity="0.5" />
+            ) : (
+              <circle cx={n.x} cy={n.y} r={n.r} fill="#0a0f1a" stroke={n.color} stroke-width="1" stroke-opacity="0.3" />
+            )}
+            {/* Labels */}
+            {n.type === 'center' ? (
+              <text x={n.x} y={n.y} text-anchor="middle" dominant-baseline="central" fill="white" font-size="16" font-weight="bold" font-family="Inter, system-ui">{n.label}</text>
+            ) : n.type === 'category' ? (
+              n.label.includes(' ') ? (
+                <Fragment>
+                  <text x={n.x} y={n.y - 7} text-anchor="middle" dominant-baseline="central" fill={n.color} font-size="10" font-weight="600" font-family="Inter, system-ui">
+                    {n.label.split(/[\s&]+/).slice(0, Math.ceil(n.label.split(/[\s&]+/).length / 2)).join(' ')}
+                  </text>
+                  <text x={n.x} y={n.y + 8} text-anchor="middle" dominant-baseline="central" fill={n.color} font-size="10" font-weight="600" font-family="Inter, system-ui">
+                    {n.label.split(/[\s&]+/).slice(Math.ceil(n.label.split(/[\s&]+/).length / 2)).join(' ')}
+                  </text>
+                </Fragment>
+              ) : (
+                <text x={n.x} y={n.y} text-anchor="middle" dominant-baseline="central" fill={n.color} font-size="10" font-weight="600" font-family="Inter, system-ui">{n.label}</text>
+              )
+            ) : n.side === 'right' ? (
+              <text x={n.x + n.r + 6} y={n.y} text-anchor="start" dominant-baseline="central" fill={n.color} font-size="9" font-family="JetBrains Mono, monospace" opacity="0.8">
+                {n.label}
+              </text>
+            ) : n.side === 'left' ? (
+              <text x={n.x - n.r - 6} y={n.y} text-anchor="end" dominant-baseline="central" fill={n.color} font-size="9" font-family="JetBrains Mono, monospace" opacity="0.8">
+                {n.label}
+              </text>
+            ) : n.side === 'top' ? (
+              <text x={n.x} y={n.y - n.r - 6} text-anchor="middle" dominant-baseline="auto" fill={n.color} font-size="9" font-family="JetBrains Mono, monospace" opacity="0.8">
+                {n.label}
+              </text>
+            ) : (
+              <text x={n.x} y={n.y + n.r + 14} text-anchor="middle" fill={n.color} font-size="9" font-family="JetBrains Mono, monospace" opacity="0.8">
+                {n.label}
+              </text>
+            )}
+          </g>
+        ))}
+      </svg>
+
+      <!-- Tooltip -->
+      <div id="skill-tooltip" class="fixed hidden rounded-xl bg-gray-900/95 backdrop-blur-sm border border-white/10 p-4 shadow-2xl z-[100] max-w-xs pointer-events-none" style="line-height:1.5">
+      </div>
     </div>
   </div>
 </section>
 
-<script>
-  // Draw SVG lines between skill nodes that share projects
-  function drawConnections() {
-    const container = document.getElementById('skill-map-container');
-    const svg = document.getElementById('skill-map-svg');
-    const nodes = document.querySelectorAll('.skill-node');
-    if (!container || !svg || nodes.length === 0) return;
+<style>
+  .skill-node:hover .node-glow { opacity: 0.15 !important; }
+  .skill-node:hover circle:not(.node-glow) { stroke-opacity: 1 !important; stroke-width: 2.5 !important; }
+</style>
 
-    // Clear existing
-    svg.innerHTML = '';
+<script is:inline>
+document.addEventListener('DOMContentLoaded', function() {
+  var tooltip = document.getElementById('skill-tooltip');
+  var nodes = document.querySelectorAll('.skill-node');
+  if (!tooltip || !nodes.length) return;
 
-    const containerRect = container.getBoundingClientRect();
-
-    // Build adjacency: nodes sharing projects get a line
-    const nodeProjects: string[][] = [];
-    nodes.forEach(n => {
-      nodeProjects.push(JSON.parse(n.getAttribute('data-projects') || '[]'));
+  nodes.forEach(function(node) {
+    node.addEventListener('mouseenter', function(e) {
+      var tip = node.getAttribute('data-tip');
+      if (!tip) return;
+      tooltip.innerHTML = tip;
+      tooltip.classList.remove('hidden');
     });
 
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const shared = nodeProjects[i].filter(p => nodeProjects[j].includes(p));
-        if (shared.length === 0) continue;
-
-        const rectA = nodes[i].getBoundingClientRect();
-        const rectB = nodes[j].getBoundingClientRect();
-
-        const x1 = rectA.left + rectA.width / 2 - containerRect.left;
-        const y1 = rectA.top + rectA.height / 2 - containerRect.top;
-        const x2 = rectB.left + rectB.width / 2 - containerRect.left;
-        const y2 = rectB.top + rectB.height / 2 - containerRect.top;
-
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', String(x1));
-        line.setAttribute('y1', String(y1));
-        line.setAttribute('x2', String(x2));
-        line.setAttribute('y2', String(y2));
-        line.setAttribute('stroke', '#3B82F6');
-        line.setAttribute('stroke-opacity', '0.15');
-        line.setAttribute('stroke-width', String(Math.min(shared.length, 3)));
-        line.setAttribute('stroke-dasharray', '4 4');
-        svg.appendChild(line);
-      }
-    }
-  }
-
-  // Highlight connections on hover
-  function setupHover() {
-    const nodes = document.querySelectorAll('.skill-node');
-    const svg = document.getElementById('skill-map-svg');
-
-    nodes.forEach((node, idx) => {
-      node.addEventListener('mouseenter', () => {
-        const lines = svg?.querySelectorAll('line');
-        lines?.forEach(line => {
-          line.setAttribute('stroke-opacity', '0.05');
-        });
-        // Highlight lines connected to this node
-        const myProjects: string[] = JSON.parse(node.getAttribute('data-projects') || '[]');
-        nodes.forEach((other, j) => {
-          if (j === idx) return;
-          const otherProjects: string[] = JSON.parse(other.getAttribute('data-projects') || '[]');
-          const shared = myProjects.filter(p => otherProjects.includes(p));
-          if (shared.length > 0) {
-            (other as HTMLElement).style.borderColor = 'rgba(59, 130, 246, 0.4)';
-          }
-        });
-      });
-
-      node.addEventListener('mouseleave', () => {
-        const lines = svg?.querySelectorAll('line');
-        lines?.forEach(line => {
-          line.setAttribute('stroke-opacity', '0.15');
-        });
-        nodes.forEach(other => {
-          (other as HTMLElement).style.borderColor = '';
-        });
-      });
+    node.addEventListener('mousemove', function(e) {
+      var tx = e.clientX + 16;
+      var ty = e.clientY - 10;
+      if (tx + 300 > window.innerWidth) tx = e.clientX - 310;
+      if (ty + 200 > window.innerHeight) ty = window.innerHeight - 210;
+      if (ty < 10) ty = 10;
+      tooltip.style.left = tx + 'px';
+      tooltip.style.top = ty + 'px';
     });
-  }
 
-  drawConnections();
-  setupHover();
-  window.addEventListener('resize', drawConnections);
+    node.addEventListener('mouseleave', function() {
+      tooltip.classList.add('hidden');
+    });
+  });
+});
 </script>
+

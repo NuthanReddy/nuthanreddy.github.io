@@ -7,7 +7,7 @@ import { projects } from "@/lib/data";
 <section id="projects" class="py-20 border-t border-white/5">
   <div class="mx-auto max-w-6xl px-6">
     <SectionHeading label="Projects" heading="Featured Projects" />
-    <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+    <div class="mt-12 divide-y divide-white/5 rounded-xl border border-white/5 overflow-hidden">
       {projects.map((project) => (
         <ProjectCard
           name={project.name}

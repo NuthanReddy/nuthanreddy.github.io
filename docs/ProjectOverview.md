@@ -221,6 +221,6 @@ The key insight: **Astro generates plain HTML at build time**. There's no JavaSc
 | 3. Experience & Education | ✅ Done | Work timeline, education cards, certification badges |
 | 4. Projects & Skills | ✅ Done | Project cards in 2-col grid, skills by category |
 | 5. Additional Sections | ✅ Done | SkillMap, Talks, OSS, Courses, Footer |
-| 6. Polish & Deploy | ⏳ Next | SEO, Lighthouse audit, Cloudflare Pages |
+| 6. Polish & Deploy | ✅ Done | SEO (JSON-LD, sitemap, robots.txt), a11y, performance, favicon |
 
 

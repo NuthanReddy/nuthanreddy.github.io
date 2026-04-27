@@ -57,6 +57,16 @@ All content comes from `nuthan-resume-template.json` at the project root. This f
 - `Courses.astro` — Courses & learning list with institute and year
 - `Footer.astro` — Social links, back-to-top, copyright
 
+### SEO & Performance
+- `public/robots.txt` — Crawler rules + sitemap reference
+- `public/favicon.svg` — SVG favicon with `</>` branding
+- `@astrojs/sitemap` integration in `astro.config.mjs`
+- JSON-LD Person schema in BaseLayout head
+- Twitter Cards + Open Graph meta tags
+- Skip-to-content link for keyboard accessibility
+- `prefers-reduced-motion` media query in global.css
+- Font preloading for non-blocking load
+
 ## Design System (via @theme in global.css)
 - `bg-surface` → `#0f172a` (page background)
 - `bg-surface-card` → `#1e293b` (card backgrounds)

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://nuthanreddy.dev/sitemap-index.xml
