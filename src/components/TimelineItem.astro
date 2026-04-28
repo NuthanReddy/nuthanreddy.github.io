@@ -46,13 +46,6 @@ const { position, company, location, startDate, endDate, highlights, keywords, i
       ))}
     </ul>
     
-    <!-- Tech tags -->
-    <div class="mt-4 flex flex-wrap gap-2">
-      {keywords.map(k => (
-        <TechTag name={k} />
-      ))}
-    </div>
-    
     <!-- Projects -->
     {projects.length > 0 && (
       <div class="mt-5 space-y-3">
