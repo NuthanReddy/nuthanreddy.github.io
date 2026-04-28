@@ -41,6 +41,7 @@ export interface Project {
   keywords: string[];
   description: string[];
   url?: string;
+  skills?: string[];
 }
 
 export interface Certification {

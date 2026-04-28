@@ -6,7 +6,9 @@ import { skills, projects, courses, certifications } from "@/lib/data";
 const skillData = new Map<string, { projects: string[]; courses: string[]; certs: string[]; contributions: string[] }>();
 
 for (const project of projects) {
-  for (const kw of project.keywords) {
+  // Index by displayed keywords + hidden skills
+  const allKws = [...project.keywords, ...((project as any).skills || [])];
+  for (const kw of allKws) {
     const key = kw.toLowerCase();
     if (!skillData.has(key)) skillData.set(key, { projects: [], courses: [], certs: [], contributions: [] });
     const d = skillData.get(key)!;
