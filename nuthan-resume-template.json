@@ -108,17 +108,36 @@
     ],
     "skills": [
       {
+        "name": "Languages",
+        "keywords": [
+          "Python",
+          "Java",
+          "Scala",
+          "C#",
+          "SQL",
+          "Go"
+        ]
+      },
+      {
         "name": "Data Platforms",
         "keywords": [
           "Apache Spark",
           "Kafka",
           "Data Lake",
-          "Data Modeling",
-          "Lakehouse",
-          "Delta Lake",
-          "BigQuery",
+          "Data Modelling",
           "Snowflake",
           "Databricks"
+        ]
+      },
+      {
+        "name": "Architecture",
+        "keywords": [
+          "Microservices",
+          "Event-Driven",
+          "Circuit Breaker",
+          "API Design",
+          "Docker",
+          "Kubernetes"
         ]
       },
       {
@@ -131,50 +150,14 @@
         ]
       },
       {
-        "name": "Languages",
-        "keywords": [
-          "Python",
-          "Java",
-          "Scala",
-          "C#",
-          "SQL",
-          "Go",
-          "Shell Scripting"
-        ]
-      },
-      {
         "name": "Engineering Excellence",
         "keywords": [
           "System Design",
           "Monitoring & Alerting",
           "Automated Testing",
-          "Code Reviews",
+          "Code Quality",
           "Telemetry",
-          "Data Contracts",
           "CI/CD"
-        ]
-      },
-      {
-        "name": "Architecture",
-        "keywords": [
-          "Microservices",
-          "Event-Driven Architecture",
-          "Data Mesh",
-          "ETL/ELT Pipelines",
-          "CQRS",
-          "Circuit Breaker",
-          "API Design"
-        ]
-      },
-      {
-        "name": "Cloud & Infrastructure",
-        "keywords": [
-          "Azure",
-          "AWS",
-          "GCP",
-          "Docker",
-          "Kubernetes",
-          "Terraform"
         ]
       },
       {
@@ -270,7 +253,7 @@
       {
         "name": "Snowflake ETL",
         "company": "Sigmoid",
-        "keywords": ["Apache Spark", "Snowflake", "Python"],
+        "keywords": ["Apache Spark", "Snowflake", "Python", "S3"],
         "url": "https://github.com/snowflakedb/spark-snowflake",
         "description": [
           "OSS committer on spark-snowflake connector — fixed critical data correctness bugs.",

@@ -143,21 +143,28 @@ skills.forEach((group, gi) => {
 
   const kwCount = orderedKws.length;
   orderedKws.forEach((kw, ki) => {
-    const totalSpan = 150 * Math.PI / 180; // 150 degrees in radians
+    // Spread scales with skill count: more skills = wider arc
+    const degreesPerSkill = 30;
+    const totalDegrees = Math.max(Math.min((kwCount - 1) * degreesPerSkill, 180), kwCount > 1 ? 100 : 0);
+    const totalSpan = totalDegrees * Math.PI / 180;
     const spread = kwCount > 1 ? totalSpan / (kwCount - 1) : 0;
     const kwAngle = angle + ((ki - (kwCount - 1) / 2) * spread);
     // Stagger radius: alternate between inner and outer ring to avoid label overlap
-    const kwRadius = ki % 2 === 0 ? 120 : 90;
+    // More nodes = more stagger levels, fewer nodes = less stagger
+    const staggerLevels = Math.min(kwCount, 4);
+    const maxR = 130, minR = 85;
+    const tier = ki % staggerLevels;
+    const kwRadius = maxR - tier * ((maxR - minR) / Math.max(staggerLevels - 1, 1));
     const kx = gx + Math.cos(kwAngle) * kwRadius;
     const ky = gy + Math.sin(kwAngle) * kwRadius;
     const backing = getSkillBacking(kw);
 
-    // Skill label placement: top categories keep text on top, bottom on bottom
-    let skillSide: 'left' | 'right' | 'top' | 'bottom' = catSide;
-    if (catSide === 'top') {
-      skillSide = 'top';
-    } else if (catSide === 'bottom') {
-      skillSide = 'bottom';
+    // Skill label: above if skill is above category, below if below
+    let skillSide: 'left' | 'right' | 'top' | 'bottom';
+    if (Math.abs(kx - gx) > Math.abs(ky - gy)) {
+      skillSide = kx > gx ? 'right' : 'left';
+    } else {
+      skillSide = ky < gy ? 'top' : 'bottom';
     }
 
     let tip = `<strong style="color:${col};font-family:monospace">${kw}</strong>`;
