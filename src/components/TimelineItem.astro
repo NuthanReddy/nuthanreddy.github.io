@@ -37,15 +37,6 @@ const { position, company, location, startDate, endDate, highlights, keywords, i
     <!-- Date range and location -->
     <p class="text-sm text-muted mt-1">{startDate} — {endDate} · {location}</p>
     
-    <!-- Highlights -->
-    <ul class="mt-4 space-y-2">
-      {highlights.map(h => (
-        <li class="text-sm text-muted leading-relaxed pl-4 relative before:content-['▹'] before:absolute before:left-0 before:text-accent">
-          {h}
-        </li>
-      ))}
-    </ul>
-    
     <!-- Projects -->
     {projects.length > 0 && (
       <div class="mt-5 space-y-3">
