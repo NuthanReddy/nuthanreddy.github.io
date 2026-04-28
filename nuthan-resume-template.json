@@ -178,16 +178,23 @@
     ],
     "projects": [
       {
-        "name": "Azure Data Governance",
+        "name": "Asset Data Catalog",
         "company": "Microsoft",
-        "keywords": ["Python", "Databricks", "Azure Data Factory", "Synapse", "C#", "Data Lake"],
+        "keywords": ["Scope", "C#", "Azure Data Factory"],
+        "description": [
+          "Optimized Data Scan of 28B+ assets and 64 asset types for 2-20x improvement; reduced data freshness from 8 days to under 24 hours.",
+          "Reduced orphaned assets by identifying ownership based on new ownership metadata from 4% to <0.1%.",
+          "Established Quality Checks, Data Contracts across DataMap, DataGrid, Trust360 — halved live-site incidents, 80% faster TTR",
+          "Eliminated non-deterministic code paths in data processing jobs, enhancing testability, reliability and consistency."
+        ]
+      },
+      {
+        "name": "Signal Processing and Auditing",
+        "company": "Microsoft",
+        "keywords": ["C#", "Kubernetes", "Docker", "Event Hub", "Data Lake", "Power BI", "Azure Data Explorer"],
         "description": [
           "Led Privacy Signals Team — data deletion, export delivery, and compliance at enterprise scale",
-          "Developed the Privacy Signals program for data deletion, export delivery, processing, and compliance reporting at enterprise scale.",
-          "Optimized Data Scan for 2-20x improvement; reduced data freshness from 8 days to 24 hours",
-          "Reduced dark data from ~4% to <0.1%, improving GDPR compliance KPIs",
-          "Established Data Contracts across DataMap, DataGrid, Trust360 — halved live-site incidents, 80% faster TTR",
-          "Eliminated non-deterministic code paths in data processing jobs, enhancing testability, reliability and consistency."
+          "Route Signals to the concerned team and audit the compliance of the actions taken and report the KPIs across the organization."
         ]
       },
       {
@@ -200,13 +207,23 @@
           "Designed the Trust360 data systems and provide a single source of truth for compliance reporting."
         ]
       },
+      {"name": "Investigation Assistant",
+        "company": "Microsoft",
+        "keywords": ["TypeScript", "RAG", "MCP", "Tools", "Node.js", "Postgres", "Azure AI Foundry"],
+        "description": [
+          "Architected Agent based Investigation and Remediation framework for incidents using TSGs and mcp tools.",
+          "Added Tools for Azure Data Explorer and Synapse to enhance investigation and remediation capabilities.",
+          "These tools run in parallel and help save hours of time invested by developer in sequentially investigating and remediating incidents."
+        ]
+      },
       {
         "name": "EBS Data Pipeline Framework",
         "company": "Walmart",
         "keywords": ["Spark", "Scala", "GCP", "Go", "Slack"],
         "description": [
-          "Built modular, config-driven data processing framework for Enterprise Business Services",
-          "Developed Go-based Code Freeze App integrating Slack and GitHub for deployment governance"
+          "Built modular, config-driven data processing framework for Enterprise Business Services.",
+          "Optimized Spark data processing jobs, reducing execution time by ~30% and improving resource utilization.",
+          "Developed Go-based Code Freeze App integrating Slack and GitHub for deployment governance."
         ]
       },
       {
@@ -246,6 +263,26 @@
         "description": [
           "OSS committer on spark-snowflake connector — fixed critical data correctness bugs",
           "Built ETL pipeline and managed Snowflake costs, permissions, and GCS integration"
+        ]
+      },
+      {
+        "name": "Teradata to Hive Migration",
+        "company": "Capgemini",
+        "keywords": ["Hive", "Teradata", "Apache Spark", "HDFS", "Java"],
+        "description": [
+          "Migrated complex business logic from Teradata to Hive for a leading energy client",
+          "Optimized workloads using partitioning, ORC/Parquet file formats, and cost-based optimization",
+          "Developed custom Java UDFs to handle complex transformations and close platform feature gaps"
+        ]
+      },
+      {
+        "name": "Real-Time Sensor Analytics",
+        "company": "Capgemini",
+        "keywords": ["Spark Streaming", "NiFi", "HBase", "Power BI", "Java"],
+        "description": [
+          "Built real-time sensor analytics pipeline to predict oil well failures for an energy client",
+          "Ingested high-velocity sensor data via NiFi into HBase for low-latency random reads",
+          "Processed streaming data with Spark Streaming and visualized predictions in Power BI"
         ]
       }
     ],
