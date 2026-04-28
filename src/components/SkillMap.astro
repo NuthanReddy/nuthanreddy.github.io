@@ -467,6 +467,22 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // Drag: mousemove on SVG
+  // Get all descendants of a node (children, grandchildren, etc.)
+  function getDescendants(nodeEl) {
+    var descendants = [];
+    var parentIdx = nodeEl.getAttribute('data-idx');
+    nodes.forEach(function(child) {
+      if (child === nodeEl) return;
+      if (child.getAttribute('data-parent') === parentIdx) {
+        descendants.push(child);
+        // Recurse: get this child's descendants too
+        var grandChildren = getDescendants(child);
+        descendants = descendants.concat(grandChildren);
+      }
+    });
+    return descendants;
+  }
+
   svg.addEventListener('mousemove', function(e) {
     if (!dragNode) return;
     var pt = getSVGPoint(e);
@@ -477,15 +493,12 @@ document.addEventListener('DOMContentLoaded', function() {
     var deltaX = nx - oldX;
     var deltaY = ny - oldY;
     moveNode(dragNode, nx, ny);
-    // Move all children along with this parent
-    var dragIdx = dragNode.getAttribute('data-idx');
-    nodes.forEach(function(child) {
-      if (child === dragNode) return;
-      if (child.getAttribute('data-parent') === dragIdx) {
-        var cx = parseFloat(child.getAttribute('data-x')) + deltaX;
-        var cy = parseFloat(child.getAttribute('data-y')) + deltaY;
-        moveNode(child, cx, cy);
-      }
+    // Move all descendants (children, grandchildren, etc.)
+    var descendants = getDescendants(dragNode);
+    descendants.forEach(function(desc) {
+      var dx = parseFloat(desc.getAttribute('data-x')) + deltaX;
+      var dy = parseFloat(desc.getAttribute('data-y')) + deltaY;
+      moveNode(desc, dx, dy);
     });
     updateEdges();
   });
@@ -537,7 +550,17 @@ document.addEventListener('DOMContentLoaded', function() {
     var pt = getSVGPoint(touch);
     var nx = pt.x - dragOffset.x;
     var ny = pt.y - dragOffset.y;
+    var oldX = parseFloat(dragNode.getAttribute('data-x'));
+    var oldY = parseFloat(dragNode.getAttribute('data-y'));
+    var deltaX = nx - oldX;
+    var deltaY = ny - oldY;
     moveNode(dragNode, nx, ny);
+    var descendants = getDescendants(dragNode);
+    descendants.forEach(function(desc) {
+      var dx = parseFloat(desc.getAttribute('data-x')) + deltaX;
+      var dy = parseFloat(desc.getAttribute('data-y')) + deltaY;
+      moveNode(desc, dx, dy);
+    });
     updateEdges();
     e.preventDefault();
   }, { passive: false });
