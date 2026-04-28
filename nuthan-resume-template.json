@@ -199,13 +199,10 @@
         "company": "Microsoft",
         "keywords": ["Python", "Databricks", "Azure Data Factory", "Synapse", "C#", "Data Lake"],
         "description": [
-          "Directed Privacy Signals Team managing data deletion, export delivery, and compliance operations",
-          "Optimized Data Scan to achieve 2-20x improvement by removing bottlenecks and non-deterministic code",
-          "Created APIs to tag/update assets for Data Map and enhanced scalability with a variety of techniques",
-          "Constructed deployment, monitoring and alerting frameworks for Signals Team",
-          "Collaborated across Microsoft to identify and source new datasets to identify asset ownerships. This helped in reducing dark data from ~4% to <0.1% of total data thereby improving accuracy in GDPR compliance KPIs and reducing the risk of fines from data protection authorities.",
-          "Established Data Contracts between DataMap, DataGrid and Trust360 teams and enforced quality rules based on the contracts and gracefully handle them. This halved the Live Site instances and preventing corruption and back-filling scenarios thereby reducing the TTR by ~80%.",
-          "Eliminated non-deterministic code paths in data processing jobs, enhancing testability, reliability and consistency."
+          "Led Privacy Signals Team — data deletion, export delivery, and compliance at enterprise scale",
+          "Optimized Data Scan for 2-20x improvement; reduced data freshness from 8 days to 24 hours",
+          "Reduced dark data from ~4% to <0.1%, improving GDPR compliance KPIs",
+          "Established Data Contracts across DataMap, DataGrid, Trust360 — halved live-site incidents, 80% faster TTR"
         ]
       },
       {
@@ -213,19 +210,17 @@
         "company": "Walmart",
         "keywords": ["Spark", "Scala", "GCP", "Go", "Slack"],
         "description": [
-          "Created rule-based data processing framework for the Enterprise Business Services Teams",
-          "Crafted modularized CILL rules and applied config-driven architecture",
-          "Developed Code Freeze App to freeze GitHub repo from Slack using Go"
+          "Built modular, config-driven data processing framework for Enterprise Business Services",
+          "Developed Go-based Code Freeze App integrating Slack and GitHub for deployment governance"
         ]
       },
       {
         "name": "Ad Pre-bid Pipeline",
         "company": "Sigmoid - OpenX",
-        "keywords": ["Kafka", "PubSub", "DataFlow", "Java", "Helm", "Kubernetes", "Docker"],
+        "keywords": ["Kafka", "PubSub", "DataFlow", "Java", "Kubernetes", "Docker"],
         "description": [
-          "Architected planet scale cost-effective streaming pipeline supporting 100k req/sec, 1GB/sec (14k req/sec/core) and 10k concurrent users - presented at Apache Con NA 2020",
-          "Deployed all services to GKE with auto-scaling based on load",
-          "Configured circuit breaker to redirect data to PubSub + Dataflow improving reliability when Kafka + Kafka Connect is down"
+          "Planet-scale streaming pipeline: 100k req/sec, 1GB/sec — presented at ApacheCon NA 2020",
+          "Auto-scaling on GKE with circuit breaker failover to PubSub + Dataflow"
         ]
       },
       {
@@ -233,17 +228,16 @@
         "company": "Sigmoid",
         "keywords": ["Apache Spark", "BigQuery", "NitroDB"],
         "description": [
-          "Evaluated Percentile function in BigQuery and deployed percentile at scale using t-digest algorithm achieving 10-100x performance on pre-aggregation",
-          "Evaluated, tested and deployed NitroDB on BigQuery reducing costs by 30%"
+          "Deployed percentile at scale using t-digest algorithm — 10-100x pre-aggregation performance",
+          "Migrated NitroDB to BigQuery, reducing costs by 30%"
         ]
       },
       {
-        "name": "NitroDB Search Optimization",
+        "name": "NitroDB Search",
         "company": "Sigmoid",
         "keywords": ["Elasticsearch", "NitroDB"],
         "description": [
-          "Designed responsive search feature for multi-tenant (multi-organization) use case where each organization sees different set of options",
-          "Integrated Elasticsearch with NitroDB and created update/reindexing strategy"
+          "Multi-tenant search with Elasticsearch — per-org facets and reindexing strategy"
         ]
       },
       {
@@ -252,9 +246,8 @@
         "keywords": ["Apache Spark", "Snowflake", "Python"],
         "url": "https://github.com/snowflakedb/spark-snowflake",
         "description": [
-          "Contributed as one of the committers of spark-snowflake, fixing critical bugs involving data correctness",
-          "Constructed ETL pipeline for Snowflake using Python",
-          "Administered Snowflake for costs, permissions and External Data Source (GCS)"
+          "OSS committer on spark-snowflake connector — fixed critical data correctness bugs",
+          "Built ETL pipeline and managed Snowflake costs, permissions, and GCS integration"
         ]
       }
     ],
