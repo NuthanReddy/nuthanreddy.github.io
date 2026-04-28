@@ -168,7 +168,7 @@ skills.forEach((group, gi) => {
     if (backing.contributions.length) tip += `<br/><br/><span style="font-size:10px;color:#666">CONTRIBUTIONS</span><br/>${backing.contributions.map(c => `<span class="text-gray-300">🔧 ${c}</span>`).join('<br/>')}`;
 
     graphEdges.push({ x1: gx, y1: gy, x2: kx, y2: ky, color: col });
-    graphNodes.push({ x: kx, y: ky, r: 8, label: kw, type: 'skill', color: col, side: skillSide, parentIdx: catIdx, tooltip: tip });
+    graphNodes.push({ x: kx, y: ky, r: 14, label: kw, type: 'skill', color: col, side: skillSide, parentIdx: catIdx, tooltip: tip });
   });
 });
 ---
@@ -196,7 +196,7 @@ skills.forEach((group, gi) => {
             ) : n.type === 'category' ? (
               <circle cx={n.x} cy={n.y} r={n.r} fill="#0a0f1a" stroke={n.color} stroke-width="1.5" stroke-opacity="0.5" />
             ) : (
-              <circle cx={n.x} cy={n.y} r={n.r} fill="#0a0f1a" stroke={n.color} stroke-width="1" stroke-opacity="0.3" />
+              <circle cx={n.x} cy={n.y} r={n.r} fill="#0a0f1a" stroke={n.color} stroke-width="1.5" stroke-opacity="0.6" />
             )}
             {/* Labels */}
             {n.type === 'center' ? (
@@ -215,19 +215,19 @@ skills.forEach((group, gi) => {
                 <text x={n.x} y={n.y} text-anchor="middle" dominant-baseline="central" fill={n.color} font-size="10" font-weight="600" font-family="Inter, system-ui">{n.label}</text>
               )
             ) : n.side === 'right' ? (
-              <text x={n.x + n.r + 6} y={n.y} text-anchor="start" dominant-baseline="central" fill={n.color} font-size="9" font-family="JetBrains Mono, monospace" opacity="0.8">
+              <text x={n.x + n.r + 6} y={n.y} text-anchor="start" dominant-baseline="central" fill={n.color} font-size="11" font-weight="500" font-family="JetBrains Mono, monospace" opacity="1">
                 {n.label}
               </text>
             ) : n.side === 'left' ? (
-              <text x={n.x - n.r - 6} y={n.y} text-anchor="end" dominant-baseline="central" fill={n.color} font-size="9" font-family="JetBrains Mono, monospace" opacity="0.8">
+              <text x={n.x - n.r - 6} y={n.y} text-anchor="end" dominant-baseline="central" fill={n.color} font-size="11" font-weight="500" font-family="JetBrains Mono, monospace" opacity="1">
                 {n.label}
               </text>
             ) : n.side === 'top' ? (
-              <text x={n.x} y={n.y - n.r - 6} text-anchor="middle" dominant-baseline="auto" fill={n.color} font-size="9" font-family="JetBrains Mono, monospace" opacity="0.8">
+              <text x={n.x} y={n.y - n.r - 6} text-anchor="middle" dominant-baseline="auto" fill={n.color} font-size="11" font-weight="500" font-family="JetBrains Mono, monospace" opacity="1">
                 {n.label}
               </text>
             ) : (
-              <text x={n.x} y={n.y + n.r + 14} text-anchor="middle" fill={n.color} font-size="9" font-family="JetBrains Mono, monospace" opacity="0.8">
+              <text x={n.x} y={n.y + n.r + 14} text-anchor="middle" fill={n.color} font-size="11" font-weight="500" font-family="JetBrains Mono, monospace" opacity="1">
                 {n.label}
               </text>
             )}
