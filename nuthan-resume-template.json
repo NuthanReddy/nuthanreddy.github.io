@@ -116,8 +116,10 @@
         "name": "Core Technologies",
         "keywords": [
           "Apache Spark",
+          "Kafka",
           "Distributed Systems",
           "Data Modeling",
+          "Stream Processing",
           "RDBMS",
           "Elasticsearch"
         ]
@@ -128,9 +130,20 @@
           "Data Lake",
           "Lakehouse",
           "Delta Lake",
-          "Parquet",
+          "Azure Synapse",
+          "Azure Data Factory",
           "BigQuery",
-          "Snowflake"
+          "Snowflake",
+          "Databricks"
+        ]
+      },
+      {
+        "name": "AI & Agents",
+        "keywords": [
+          "Agentic AI",
+          "Azure AI Foundry",
+          "RAG",
+          "LLM Orchestration"
         ]
       },
       {
@@ -139,6 +152,7 @@
           "Python",
           "Java",
           "Scala",
+          "C#",
           "SQL",
           "Go",
           "Shell Scripting"
@@ -147,12 +161,13 @@
       {
         "name": "Engineering Excellence",
         "keywords": [
-          "Git",
-          "CI/CD",
-          "Automated Testing",
-          "Agile/Scrum",
           "System Design",
-          "Code Reviews"
+          "CI/CD",
+          "Data Contracts",
+          "Monitoring & Alerting",
+          "Automated Testing",
+          "Code Reviews",
+          "Agile/Scrum"
         ]
       },
       {
@@ -161,9 +176,9 @@
           "Azure",
           "AWS",
           "GCP",
-          "Databricks",
           "Docker",
-          "Kubernetes"
+          "Kubernetes",
+          "Terraform"
         ]
       },
       {
@@ -171,7 +186,10 @@
         "keywords": [
           "Data Governance",
           "Data Quality",
-          "GDPR Compliance"
+          "Data Lineage",
+          "PII Detection",
+          "GDPR Compliance",
+          "Data Mesh"
         ]
       }
     ],
