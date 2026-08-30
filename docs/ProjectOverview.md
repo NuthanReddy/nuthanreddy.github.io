@@ -65,7 +65,7 @@ Think of each `interface` as a blueprint:
 | `Job` | A work experience entry (position, company, dates, bullet points) |
 | `Education` | A degree/school entry |
 | `SkillGroup` | A skill category (e.g., "Languages") with a list of keywords |
-| `Project` | A project with description bullets and tech keywords |
+| `Project` | A project with description bullets, displayed tech keywords, and optional skill-map tags |
 | `Certification` | A cert with name, date, optional issuer/URL |
 | `Course` | A course you've taken |
 | `ResumeData` | The **root type** that ties everything together |
@@ -77,7 +77,7 @@ Think of each `interface` as a blueprint:
 ## 3. Data Layer
 
 ### nuthan-resume-template.json
-Your actual resume content — all your jobs, education, skills, projects, certifications, and courses as structured JSON. This is the **single source of truth** for the entire site.
+Your actual resume content — all your jobs, education, skills, projects, certifications, and courses as structured JSON. Project entries keep their technologies and supporting skill-map tags alongside impact-focused descriptions. This is the **single source of truth** for the entire site.
 
 ### data.ts
 The **data access layer** — a thin bridge between the JSON file and the rest of the app.
@@ -165,7 +165,7 @@ The **HTML shell** shared by all pages:
 | `Projects.astro` | Featured projects section — maps projects through ProjectCard in 2-col grid |
 | `ProjectCard.astro` | Reusable: project name, company, description bullets, tech tags, optional link |
 | `Skills.astro` | Technical skills grouped by category — 6 groups in responsive 3-col grid |
-| `SkillMap.astro` | Skills × Projects relationship map — build-time keyword matching, zero JS |
+| `SkillMap.astro` | Skills × Projects relationship map — build-time matching across project technologies and skill tags, zero JS |
 | `Talks.astro` | Conference talks + OSS contributions — ApacheCon 2020, spark-snowflake |
 | `Courses.astro` | Compact 2-col list of 11 courses with institute and year |
 | `Footer.astro` | Social links (LinkedIn, GitHub, Email), back-to-top, copyright |
@@ -219,8 +219,7 @@ The key insight: **Astro generates plain HTML at build time**. There's no JavaSc
 | 1. Scaffolding & Config | ✅ Done | Astro + TS + Tailwind, typed data layer, agent instructions |
 | 2. Layout & Hero | ✅ Done | Navbar, hero (split layout), about section, dark design system |
 | 3. Experience & Education | ✅ Done | Work timeline, education cards, certification badges |
-| 4. Projects & Skills | ✅ Done | Project cards in 2-col grid, skills by category |
+| 4. Projects & Skills | ✅ Done | Project cards with curated technology tags, impact descriptions, and skill mappings |
 | 5. Additional Sections | ✅ Done | SkillMap, Talks, OSS, Courses, Footer |
 | 6. Polish & Deploy | ✅ Done | SEO (JSON-LD, sitemap, robots.txt), a11y, performance, favicon |
-
 
