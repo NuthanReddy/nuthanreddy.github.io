@@ -219,7 +219,6 @@ The key insight: **Astro generates plain HTML at build time**. There's no JavaSc
 | 1. Scaffolding & Config | ✅ Done | Astro + TS + Tailwind, typed data layer, agent instructions |
 | 2. Layout & Hero | ✅ Done | Navbar, hero (split layout), about section, dark design system |
 | 3. Experience & Education | ✅ Done | Work timeline, education cards, certification badges |
-| 4. Projects & Skills | ✅ Done | Project cards with curated technology tags, impact descriptions, and skill mappings |
+| 4. Projects & Skills | ✅ Done | Project cards with curated technology tags, synchronized impact statements, and skill mappings |
 | 5. Additional Sections | ✅ Done | SkillMap, Talks, OSS, Courses, Footer |
 | 6. Polish & Deploy | ✅ Done | SEO (JSON-LD, sitemap, robots.txt), a11y, performance, favicon |
-
