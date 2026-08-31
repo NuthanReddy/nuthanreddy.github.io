@@ -5,12 +5,13 @@
     "email": "nuthan.reddy999@gmail.com",
     "linkedin": "linkedin.com/in/nuthanreddy/",
     "github": "github.com/NuthanReddy",
+    "website": "nuthanreddy.github.io",
     "phone": "9474985552",
     "location": {
       "city": "Hyderabad",
       "countryCode": "IN"
     },
-    "summary": "Lead Software Engineer, avid learner and tech enthusiast, passionate about building scalable and reliable systems.\nSince 2015"
+    "summary": "Lead Software Engineer with 11+ years building large-scale data platforms and governance systems across Azure, AWS and GCP. Strong hands-on expertise in Python/Java, Apache Spark, and modern Data Lake architectures."
   },
   "headings": {
     "work": {
@@ -24,18 +25,23 @@
           "highlights": [
             "Led end-to-end SDLC for scalable data catalog for asset discovery, deletion and compliance tagging across 28B+ assets and 64 asset types in Microsoft.",
             "Designed a generic Facet Processing Framework for different Privacy Programs. Developed the Privacy Signals program for data deletion, export delivery, processing, and compliance reporting at enterprise scale.",
-            "Architected Agent based Investigation and Remediation framework for incidents, reducing mean time to resolution by almost half and in some cases this entirely eliminated the need for manual intervention.",
+            "Architected an Agentic Incident Investigation and Remediation framework using RAG on Codebase and TSGs. This reducing MTTR by almost 70 percent and in some cases eliminating manual intervention.",
+            "Defined agentic evaluation metrics and KPIs from agent execution logs and review loops to continuously improve incident-agent reliability across releases.",
             "Redesigned distributed scan bottlenecks to deliver 2-20x performance gains, improving data freshness from 8 days to 24 hours.",
-            "Defined and enforced Data Contracts across DataMap, DataGrid, and Trust360, eliminating multiple live-site incidents and reduce job failures."
+            "Defined and enforced Data Contracts across DataMap, DataGrid, and Trust360, eliminating multiple live-site incidents and reducing job failures."
           ],
           "keywords": [
             "Data Governance",
-            "Agentic Systems",
-            "Azure AI Foundry",
+            "RAG",
+            "Agentic AI",
+            "Azure Foundry",
             "Python",
             "Apache Spark",
+            "Databricks",
             "Synapse",
-            "C#"
+            "C#",
+            "Delta Lake",
+            "CI/CD"
           ]
         },
         {
@@ -207,12 +213,11 @@
       },
       {"name": "Investigation Assistant",
         "company": "Microsoft",
-        "keywords": ["TypeScript", "Agentic AI", "Azure AI Foundry", "Single-Agent Orchestration", "RAG", "MCP", "Tool Calling", "LLM Orchestration", "Azure Data Explorer", "Synapse", "Node.js", "Postgres"],
+        "keywords": ["TypeScript", "Agentic AI", "Single-Agent Orchestration", "RAG", "MCP", "Tool Calling", "LLM Orchestration", "Azure Data Explorer", "Synapse", "Node.js", "Postgres"],
         "skills": ["API Design", "Microservices", "System Design", "Design Patterns", "Telemetry", "Code Quality"],
         "description": [
-          "Architected a single-agent incident investigation and remediation workflow using RAG over troubleshooting guides (TSGs), MCP-based tool calling, and Azure AI Foundry.",
-          "Built Azure Data Explorer and Synapse tools that execute in parallel to gather evidence and perform remediation.",
-          "Reduced mean time to resolution by nearly 50%, with some incident flows requiring no manual intervention."
+            "Architected an Agentic Incident Investigation and Remediation framework using RAG on Codebase and TSGs. This reducing MTTR by almost 70 percent and in some cases eliminating manual intervention.",
+            "Defined agentic evaluation metrics and KPIs from agent execution logs and review loops to continuously improve incident-agent reliability across releases."
         ]
       },
       {
